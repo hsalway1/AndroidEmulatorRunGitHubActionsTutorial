@@ -51,8 +51,14 @@ function launch_emulator () {
   fi
 }
 
-function check_emulator_status () {
-  runtime=0
+function wait_for_emulator () {
+  boot_complete=""
+  while [[ $boot_complete != *"1"* ]]; do
+      sleep 5
+      boot_complete=$(adb -e shell getprop sys.boot_completed 2>&1)
+  done
+}
+
   while [[ -z "$(adb devices | grep emulator)" ]]; do
     echo "waiting for emulator to boot up"
     sleep 5
@@ -80,7 +86,7 @@ function hidden_policy() {
 
 launch_emulator
 sleep 2
-check_emulator_status
+wait_for_emulator
 sleep 1
 disable_animation
 sleep 1
