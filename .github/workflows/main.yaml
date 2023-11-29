@@ -44,4 +44,7 @@ jobs:
 
       - name: Check emulator status
         run: adb wait-for-device shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done;'
+
+      - name: Print processes
+        run: adb shell top
         
