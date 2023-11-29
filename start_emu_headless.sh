@@ -53,26 +53,18 @@ function launch_emulator () {
 
 function wait_for_emulator () {
   boot_complete=""
+  runtime=0
   while [[ $boot_complete != *"1"* ]]; do
       sleep 5
       boot_complete=$(adb -e shell getprop sys.boot_completed 2>&1)
-  done
-}
-
-  while [[ -z "$(adb devices | grep emulator)" ]]; do
-    echo "waiting for emulator to boot up"
-    sleep 5
-    (( runtime+=5 ))
-
-    if (( $runtime > 240 )); then
+      (( runtime+=5 ))
+      if (( $runtime > 240 )); then
         echo "Timeout"
         exit 1
-    fi
-    done
-
-    echo "Emulator started"
-    exit 0
-};
+      fi
+    
+  done
+}
 
 function disable_animation() {
   adb shell "settings put global window_animation_scale 0.0"
